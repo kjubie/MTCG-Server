@@ -13,7 +13,7 @@ namespace MTCG_Server {
             this.TcpL = TcpL;
         }
 
-        private void FilterMsg(string rMsg, Socket client) {
+        public void FilterMsg(string rMsg) {
             string[] msgArray = rMsg.Split(new char[0]);
 
             switch (msgArray[0]) {
