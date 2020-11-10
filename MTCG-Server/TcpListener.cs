@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -10,6 +11,8 @@ namespace MTCG_Server {
         private int Port { get; set; } = 25575;
         private IPAddress Addr { get; set; } = IPAddress.Parse("127.0.0.1");
         private bool Running { get; set; } = false;
+        private List<RequestContext> Rc = new List<RequestContext>();
+        private Socket client;
         public Listener() {
             Running = true;
         }
@@ -28,13 +31,14 @@ namespace MTCG_Server {
 
                 while (Running) {
                     Console.WriteLine("Waiting...");
-                    Socket client = Server.AcceptSocket();
+                    client = Server.AcceptSocket();
                     Console.WriteLine("Connected!");
 
                     if (client.Connected) {
-                        string rMsg = ReceiveMsg(client);
+                        string rMsg = ReceiveMsg();
                         Console.WriteLine(rMsg);
-                        FilterMsg(rMsg, client);
+                        Rc.Add(new RequestContext(this));
+                        //FilterMsg(rMsg, client);
                     }
 
                     client.Close();
@@ -49,7 +53,7 @@ namespace MTCG_Server {
             return err;
         }
 
-        public string ReceiveMsg(Socket client) {
+        public string ReceiveMsg() {
             string msg;
 
             byte[] bMsg = new byte[1024];
@@ -59,27 +63,7 @@ namespace MTCG_Server {
             return msg;
         }
 
-        private void FilterMsg(string rMsg, Socket client) {
-            string[] msgArray = rMsg.Split(new char[0]);
-
-            switch (msgArray[0]) {
-                case "GET":
-                    SendMsg(200, "text/plain", msgArray[1], client);
-                    break;
-                case "POST":
-                    SendMsg(501, "text/plain", "Not yet Implemented", client);
-                    break;
-                case "UPDATE":
-                    SendMsg(501, "text/plain", "Not yet Implemented", client);
-                    break;
-                case "DELETE":
-                    SendMsg(501, "text/plain", "Not yet Implemented", client);
-                    break;
-            }
-
-        }
-
-        public void SendMsg(int statusCode, string contentType, string msg, Socket client) {;
+        public void SendMsg(int statusCode, string contentType, string msg) {;
             byte[] bSendHead = Encoding.ASCII.GetBytes(BuildHeader(statusCode, contentType, msg.Length));
             byte[] bSendMsg = Encoding.ASCII.GetBytes(msg);
             client.Send(bSendHead, bSendHead.Length, 0);
