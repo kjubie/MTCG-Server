@@ -12,17 +12,22 @@ namespace MTCG_Server {
         private IPAddress Addr { get; set; } = IPAddress.Parse("127.0.0.1");
         private bool Running { get; set; } = false;
         //private List<RequestContext> Rc = new List<RequestContext>();
-        private RequestContext Rc;
+        private RequestHandler RH;
+        private RequestContext RC;
         private Socket client;
-        public Listener() {
+        private MessageHandler MH;
+        public Listener(MessageHandler MH) {
             Running = true;
+            this.MH = MH; 
         }
 
-        public Listener(string addr, int port) {
+        public Listener(string addr, int port, MessageHandler MH) {
             Running = true;
             Addr = IPAddress.Parse(addr);
             Port = port;
+            this.MH = MH;
         }
+
         public int InitListener() {
             int err = 0;
 
@@ -36,10 +41,10 @@ namespace MTCG_Server {
                     Console.WriteLine("Connected!");
 
                     if (client.Connected) {
-                        string rMsg = ReceiveMsg();
-                        //Rc.Add(new RequestContext(this));
-                        Rc = new RequestContext(this);
-                        Rc.FilterMsg(rMsg);
+                        BuildContext(ReceiveRequest());
+                        
+                        RH = new RequestHandler(this, MH, RC);
+                        RH.DoRequest();
                     }
 
                     client.Close();
@@ -54,19 +59,47 @@ namespace MTCG_Server {
             return err;
         }
 
-        public string ReceiveMsg() {
-            string msg;
+        private void BuildContext(string request) {
+            string[] reqArray = request.Split(new char[0]);
+            int i = 0, countSpaces = 0;
 
-            byte[] bMsg = new byte[1024];
-            int i = client.Receive(bMsg, bMsg.Length, 0);
-            msg = Encoding.ASCII.GetString(bMsg);
+            RC = new RequestContext(reqArray[0], reqArray[1], reqArray[2]);
 
-            Console.Write(msg + "\n");
+            foreach (string element in reqArray) {
+                if (element.EndsWith(":") && countSpaces < 3)
+                    RC.values.Add(element.Remove(element.Length - 1), reqArray[i + 1]);
+                else if (element.Equals(""))
+                    ++countSpaces;
+                else if (!element.Equals("") && countSpaces < 3)
+                    countSpaces = 0;
+                else if (countSpaces >= 3 && !element.Equals("")) {
+                    RC.Body += element + " ";
+                }
+                
+                ++i;
+            }
 
-            return msg;
+            try {
+                RC.Body = RC.Body.Remove(int.Parse(RC.values["Content-Length"]), RC.Body.Length - int.Parse(RC.values["Content-Length"]));
+            } catch (KeyNotFoundException e) {
+                RC.Body = "";
+            }
+
         }
 
-        public void SendMsg(int statusCode, string contentType, string msg) {;
+        public string ReceiveRequest() {
+            string request;
+
+            byte[] bRequest = new byte[1024];
+            int i = client.Receive(bRequest, bRequest.Length, 0);
+            request = Encoding.ASCII.GetString(bRequest);
+
+            Console.Write(request + "\n");
+
+            return request;
+        }
+
+        public void SendResponse(int statusCode, string contentType, string msg) {;
             byte[] bSendHead = Encoding.ASCII.GetBytes(BuildHeader(statusCode, contentType, msg.Length));
             byte[] bSendMsg = Encoding.ASCII.GetBytes(msg);
             client.Send(bSendHead, bSendHead.Length, 0);
@@ -76,8 +109,8 @@ namespace MTCG_Server {
         public string BuildHeader(int statusCode, string contentType, int contentLength) {
             string header = "";
 
-            header = header + "HTTP/1.1" + statusCode + "\r\n";
-            header = header + "Server: cx1193719-b\r\n";
+            header = header + "HTTP/1.1 " + statusCode + "\r\n";
+            header = header + "Server: 127.0.0.1\r\n";
             header = header + "Content-Type: " + contentType + "\r\n";
             header = header + "Accept-Ranges: bytes\r\n";
             header = header + "Content-Length: " + contentLength + "\r\n\r\n";

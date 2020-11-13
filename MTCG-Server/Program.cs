@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 namespace MTCG_Server {
     class Program {
         static void Main(string[] args) {
-            Listener lt = new Listener();
+            MessageHandler MH = new MessageHandler();
+            Listener lt = new Listener(MH);
             lt.InitListener();
         }
     }

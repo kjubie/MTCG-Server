@@ -7,45 +7,16 @@ using System.Threading.Tasks;
 
 namespace MTCG_Server {
     class RequestContext {
-        private Listener TcpL { get; set; }
+        public string Verb { get; set; }
+        public string Resource { get; set; }
+        public string Version { get; set; }
+        public string Body { get; set; } = "";
+        public IDictionary<string, string> values = new Dictionary<string, string>();
 
-        public RequestContext(Listener TcpL) {
-            this.TcpL = TcpL;
-        }
-
-        public void FilterMsg(string rMsg) {
-            string[] msgArray = rMsg.Split(new char[0]);
-
-            switch (msgArray[0]) {
-                case "GET":
-                    Get(msgArray[1]);
-                    break;
-                case "POST":
-                    Post();
-                    break;
-                case "UPDATE":
-                    Update();
-                    break;
-                case "DELETE":
-                    Delete();
-                    break;
-            }
-        }
-
-        private void Get(string resource) {
-            TcpL.SendMsg(200, "text/plain", resource);
-        }
-
-        private void Post() {
-            TcpL.SendMsg(501, "text/plain", "Not yet Implemented");
-        }
-
-        private void Update() {
-            TcpL.SendMsg(501, "text/plain", "Not yet Implemented");
-        }
-
-        private void Delete() {
-            TcpL.SendMsg(501, "text/plain", "Not yet Implemented");
+        public RequestContext(string Verb, string Resource, string Version) {
+            this.Verb = Verb;
+            this.Resource = Resource;
+            this.Version = Version;
         }
     }
 }
