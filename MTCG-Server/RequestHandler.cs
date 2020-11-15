@@ -44,30 +44,42 @@ namespace MTCG_Server {
                 string[] splited = resource.Split('/');
                 try {
                     TcpL.SendResponse(200, "text/plain", MH.ReadMessage(int.Parse(splited[2])));
-                } catch (Exception e) {
-                    TcpL.SendResponse(400, "text/plain", "Invalid Message ID!");
+                } catch {
+                    TcpL.SendResponse(404, "text/plain", "Message Not Found!");
                 }
             } else
                 TcpL.SendResponse(400, "text/plain", "Bad Request!");
         }
 
         private void Post(string msg) {
-            if (MH.AddMessage(msg) == 0)
-                TcpL.SendResponse(200, "text/plain", "Message sent!");
-            else
-                TcpL.SendResponse(500, "text/plain", "Something went wrong!");
+            try {
+                if (RC.values["Content-Type"].Equals("text/plain;"))
+                    if (MH.AddMessage(msg) == 0)
+                        TcpL.SendResponse(200, "text/plain", "Message sent!");
+                    else
+                        TcpL.SendResponse(500, "text/plain", "Something went wrong!");
+                else
+                    TcpL.SendResponse(400, "text/plain", "Bad Content Type!");
+
+            } catch {
+                TcpL.SendResponse(400, "text/plain", "Bad Request!");
+            }
         }
 
         private void Update(string resource, string msg) {
             if (resource.Contains("/message/")) {
                 string[] splited = resource.Split('/');
                 try {
-                    if (MH.UpdateMessage(int.Parse(splited[2]), msg) == 0)
-                        TcpL.SendResponse(200, "text/plain", "Updated Message!");
+                    if (RC.values["Content-Type"].Equals("text/plain;"))
+                        if (MH.UpdateMessage(int.Parse(splited[2]), msg) == 0)
+                            TcpL.SendResponse(200, "text/plain", "Updated Message!");
+                        else
+                            TcpL.SendResponse(404, "text/plain", "Message Does Not Exist!");
                     else
-                        TcpL.SendResponse(200, "text/plain", "Message Does Not Exist!");
-                } catch (Exception e) {
-                    TcpL.SendResponse(400, "text/plain", "Invalid Message ID!");
+                        TcpL.SendResponse(400, "text/plain", "Bad Content Type!");
+
+                } catch {
+                    TcpL.SendResponse(404, "text/plain", "Invalid Message ID!");
                 }
             } else
                 TcpL.SendResponse(400, "text/plain", "Bad Request!");
@@ -80,9 +92,9 @@ namespace MTCG_Server {
                     if (MH.DeleteMessage(int.Parse(splited[2])) == 0)
                         TcpL.SendResponse(200, "text/plain", "Deleted Message!");
                     else
-                        TcpL.SendResponse(200, "text/plain", "Message Does Not Exist!");
-                } catch (Exception e) {
-                    TcpL.SendResponse(400, "text/plain", "Invalid Message ID!");
+                        TcpL.SendResponse(404, "text/plain", "Message Does Not Exist!");
+                } catch {
+                    TcpL.SendResponse(404, "text/plain", "Invalid Message ID!");
                 }
             } else
                 TcpL.SendResponse(400, "text/plain", "Bad Request!");

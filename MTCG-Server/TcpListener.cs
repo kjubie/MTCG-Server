@@ -11,7 +11,6 @@ namespace MTCG_Server {
         private int Port { get; set; } = 25575;
         private IPAddress Addr { get; set; } = IPAddress.Parse("127.0.0.1");
         private bool Running { get; set; } = false;
-        //private List<RequestContext> Rc = new List<RequestContext>();
         private RequestHandler RH;
         private RequestContext RC;
         private Socket client;
@@ -99,7 +98,7 @@ namespace MTCG_Server {
             return request;
         }
 
-        public void SendResponse(int statusCode, string contentType, string msg) {;
+        public void SendResponse(int statusCode, string contentType, string msg) {
             byte[] bSendHead = Encoding.ASCII.GetBytes(BuildHeader(statusCode, contentType, msg.Length));
             byte[] bSendMsg = Encoding.ASCII.GetBytes(msg);
             client.Send(bSendHead, bSendHead.Length, 0);
