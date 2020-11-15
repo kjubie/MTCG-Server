@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG_Server {
+    /* 
+     * Holds the Message
+     */
     class Message {
         public String MsgText { get; set; }
 
