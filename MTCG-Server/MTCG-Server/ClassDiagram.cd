@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="MTCG_Server.Listener">
+    <Position X="5.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAgACCAAAAIAAQBACAAAAAgIAAAABgAAAAA=</HashCode>
+      <FileName>TcpListener.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="MH" />
+      <Field Name="RC" />
+      <Field Name="RH" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="MTCG_Server.MessageHandler">
+    <Position X="2.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAAABgAAAIAEAAAAAAAACAAAA=</HashCode>
+      <FileName>MessageHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MTCG_Server.RequestContext">
+    <Position X="8.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IIAAAAAAIAAAAAAAAAABAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>RequestContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MTCG_Server.RequestHandler">
+    <Position X="8.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAgAAACABAAAIAACAACAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>RequestHandler.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="MH" />
+      <Field Name="RC" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="MTCG_Server.Message">
+    <Position X="1.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Message.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
