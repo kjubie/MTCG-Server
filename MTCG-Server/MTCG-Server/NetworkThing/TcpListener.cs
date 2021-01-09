@@ -16,9 +16,16 @@ namespace MTCG_Server {
         private RequestContext RC;
         private Socket client;
         private MessageHandler MH;
-        public Listener(MessageHandler MH) {
+        public Manager ma;
+
+        public Listener(MessageHandler MH, ref Manager ma) {
             Running = true;
-            this.MH = MH; 
+            this.MH = MH;
+            this.ma = ma;
+        }
+
+        public Listener(ref Manager ma) {
+            this.ma = ma;
         }
 
         public Listener(string addr, int port, MessageHandler MH) {

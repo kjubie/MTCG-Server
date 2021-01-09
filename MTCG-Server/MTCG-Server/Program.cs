@@ -6,11 +6,11 @@ using System.Text;
 namespace MTCG_Server {
     public class Program {
         static void Main(string[] args) {
-            //MessageHandler MH = new MessageHandler();
-            //Listener lt = new Listener(MH);
-            //lt.InitListener();
-
             Manager ma = new Manager();
+
+            MessageHandler MH = new MessageHandler();
+            Listener lt = new Listener(MH, ref ma);
+            lt.InitListener();
         }
     }
 }

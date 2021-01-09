@@ -9,7 +9,7 @@ namespace MTCG_Server {
     /*
      * Class that holds the http header and body content
      */
-    class RequestContext {
+    public class RequestContext {
         public string Verb { get; set; }    //Http verb (GET, POST, PUT, or DELETE)
         public string Resource { get; set; }    //Which resource is requested 
         public string Version { get; set; } //Http version

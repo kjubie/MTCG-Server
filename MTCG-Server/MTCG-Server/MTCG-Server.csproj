@@ -32,8 +32,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Json.Net, Version=1.0.23.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Json.Net.1.0.23\lib\netstandard2.0\Json.Net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.1.1.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Npgsql, Version=5.0.1.1, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
       <HintPath>..\packages\Npgsql.5.0.1.1\lib\netstandard2.0\Npgsql.dll</HintPath>
@@ -87,7 +93,6 @@
     <Compile Include="Effects\OnFire.cs" />
     <Compile Include="Effects\SetOnFire.cs" />
     <Compile Include="Manager.cs" />
-    <Compile Include="NetworkThing\UserConnection.cs" />
     <Compile Include="Races\Dragon.cs" />
     <Compile Include="Effects\Effect.cs" />
     <Compile Include="Races\Elve.cs" />
@@ -114,12 +119,12 @@
     <Compile Include="NetworkThing\TcpListener.cs" />
     <Compile Include="Types\Types.cs" />
     <Compile Include="Effects\Undead.cs" />
-    <Compile Include="User.cs" />
+    <Compile Include="Users\User.cs" />
     <Compile Include="Races\Wizzard.cs" />
+    <Compile Include="Users\UserHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="ClassDiagram.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

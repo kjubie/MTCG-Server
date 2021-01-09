@@ -171,7 +171,10 @@ namespace MTCG_Server.Battle {
                 Console.WriteLine(winner.name + " is the Winner of this Battle!");
                 
                 winner.elo += 5;
+                winner.wins += 1;
+
                 loser.elo -= 10;
+                loser.losses += 1;
 
                 user_a.SetBattleDeck(null);
                 user_b.SetBattleDeck(null);

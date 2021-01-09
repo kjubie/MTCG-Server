@@ -6,18 +6,13 @@ using System.Threading.Tasks;
 
 namespace MTCG_Server {
     public class Manager {
-        //Listener lt = new Listener(MH);
-        //lt.InitListener();
-
-        Listener Lt;
         DBConnector DBConnector;
 
-        Dictionary<string, User> Users;
-        Dictionary<string, Card> Cards;
+        public Dictionary<string, User> Users;
+        public Dictionary<string, Card> Cards;
         Types Types;
 
         public Manager() {
-            //Lt = new Listener();
             DBConnector = new DBConnector("localhost", "postgres", "abru13", "mtcg");
             Types = new Types();
 

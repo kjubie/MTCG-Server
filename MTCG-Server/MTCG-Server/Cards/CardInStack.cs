@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MTCG_Server {
     public class CardInStack {
-        Card card;
+        public Card card;
         int isInStore;
         int isInDeck;
 
