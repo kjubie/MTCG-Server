@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG_Server {
-    class SetOnFire : Effect {
+    public class SetOnFire : Effect {
         public SetOnFire() {
             name = "SetOnFire";
             text = "Grant an enemy Monster On Fire.";

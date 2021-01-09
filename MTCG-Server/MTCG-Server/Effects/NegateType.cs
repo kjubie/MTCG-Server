@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG_Server {
-    class NegateType : Effect {
+    public class NegateType : Effect {
         public NegateType() {
             name = "NegateType";
             text = "Set the targets type to normal for the rest of the game.";
@@ -18,7 +18,7 @@ namespace MTCG_Server {
 
         public override void DoBeforeEffect(ref Card opposingCard, ref Card me) {
             Types types = new Types();
-            Type t;
+            ElementType t;
 
             types.types.TryGetValue("normal", out t);
             opposingCard.type = t;

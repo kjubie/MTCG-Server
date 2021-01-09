@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG_Server {
-    class Wizzard : Race {
+    public class Wizzard : Race {
         public Wizzard() {
             race = "wizzard";
             text = "Wizzards can control Orks, so Orks cant damage them.";

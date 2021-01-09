@@ -33,22 +33,16 @@ insert into race values('-', '-');
 -- Spells
 insert into card values('Fire Arrow Rain', 20, 'fire', 'SetOnFire', 0, '-');
 insert into card values('Hydro Pump', 25, 'water', '-', 0, '-');
-insert into card values('Grass Flute', 15, 'grass', 'Buff15', 0, '-');
+insert into card values('Grass Flute', 15, 'grass', '15', 0, '-');
 insert into card values('Heroic Charge', 25, 'normal', '-', 0, '-');
 insert into card values('For the Nation', 55, 'normal', 'OnFire', 0, '-');
-insert into card values('Wait, i get help', 20, 'normal', 'Buff15', 0, '-');
+insert into card values('Wait, i get help', 20, 'normal', '15', 0, '-');
 insert into card values('Bonk!', 20, 'normal', '-', 0, '-');
 insert into card values('Big Bonk!', 30, 'normal', '-', 0, '-');
 insert into card values('Vulcan Shower', 50, 'fire', '-', 0, '-');
 insert into card values('Sneaky Stabbyn', 30, 'normal', '10', 0, '-');
 insert into card values('Cursefire Staff', 10, 'fire', '15,Silence,SetOnFire', 0, '-');
-insert into card values('Grass Cannon', 100, 'grass', '-40', 0, '');
-insert into card values('Fire Arrow Rain', 0, 'fire', 'OnFire', 0, '');
-insert into card values('Fire Arrow Rain', 0, 'fire', 'OnFire', 0, '');
-insert into card values('Fire Arrow Rain', 0, 'fire', 'OnFire', 0, '');
-insert into card values('Fire Arrow Rain', 0, 'fire', 'OnFire', 0, '');
-insert into card values('Fire Arrow Rain', 0, 'fire', 'OnFire', 0, '');
-insert into card values('Fire Arrow Rain', 0, 'fire', 'OnFire', 0, '');
+insert into card values('Grass Cannon', 100, 'grass', '-40', 0, '-');
 
 -- Monster
 insert into card values('Angry Mob', 20, 'normal', '-', 1, 'Human');
@@ -95,3 +89,13 @@ insert into card values('', 0, '', '-', 1, 'Wizzard');
 insert into card values('', 0, '', '-', 1, 'Wizzard');
 insert into card values('', 0, '', '-', 1, 'Wizzard');
 
+insert into mtcguser values ('kjubie', '123', 10, 100);
+insert into stackcards values ('kjubie', 'Citrus the Bold');
+insert into stackcards values ('kjubie', 'Imperial Fire Archers');
+insert into stackcards values ('kjubie', 'Leader Of the Deep');
+insert into stackcards values ('kjubie', 'Jungle Assassin');
+insert into stackcards values ('kjubie', 'Fire Arrow Rain');
+insert into deckcards values ('kjubie', 'Citrus the Bold');
+insert into deckcards values ('kjubie', 'Imperial Fire Archers');
+insert into deckcards values ('kjubie', 'Leader Of the Deep');
+insert into deckcards values ('kjubie', 'Fire Arrow Rain');

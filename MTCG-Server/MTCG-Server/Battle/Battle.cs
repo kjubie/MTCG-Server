@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace MTCG_Server.Battle {
-    class Battle {
+    public class Battle {
         User user_a;
         Card[] user_a_handcards = new Card[2];
 

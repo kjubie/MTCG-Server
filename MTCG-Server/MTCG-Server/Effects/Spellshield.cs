@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG_Server {
-    class Spellshield : Effect {
+    public class Spellshield : Effect {
         public Spellshield() {
             name = "Spellshield";
             text = "I only take half the damage from spells.";

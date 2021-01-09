@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG_Server {
-    class Deck {
+    public class Deck {
         Dictionary<string, Card> cards;
 
         public Deck() {
@@ -28,6 +28,10 @@ namespace MTCG_Server {
 
         public Card GetCard(int id) {
             return cards.ElementAt(id).Value;
+        }
+
+        public void GetCards(out Dictionary<string, Card> cards) {
+            cards = this.cards;
         }
 
         public int AddCard(Card card) {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG_Server {
-    class Goblin : Race {
+    public class Goblin : Race {
         public Goblin() {
             race = "goblin";
             text = "Goblins are too afraid of Dragons to attack them.";

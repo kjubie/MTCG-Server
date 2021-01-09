@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG_Server {
-    class Dragon : Race {
+    public class Dragon : Race {
         public Dragon() {
             race = "dragon";
             text = "";

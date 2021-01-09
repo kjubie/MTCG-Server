@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG_Server {
-    class Overwehlm : Effect {
+    public class Overwehlm : Effect {
         public Overwehlm() {
             name = "Overwehlm";
             text = "If I kill the target monster, add my remaining damage to the monster/spell played next round.";

@@ -11,6 +11,7 @@ namespace MTCG_Server {
         private int Port { get; set; } = 25575;
         private IPAddress Addr { get; set; } = IPAddress.Parse("127.0.0.1");
         private bool Running { get; set; } = false;
+
         private RequestHandler RH;
         private RequestContext RC;
         private Socket client;
@@ -79,7 +80,7 @@ namespace MTCG_Server {
             RC = new RequestContext(reqArray[0], reqArray[1], reqArray[2]); //Set request verb (reqArray[0]), resource (reqArray[1]) and version (reqArray[2]) 
 
             foreach (string element in reqArray) {  //Loop throu each element
-                if (element.EndsWith(":") && countSpaces < 3)   //If element ends with ':' e.q.: 'Content-Type:'
+                if (element.EndsWith(":") && countSpaces < 3)   //If element ends with ':' e.q.: 'Content-ElementType:'
                     RC.values.Add(element.Remove(element.Length - 1), reqArray[i + 1]); //Then store this element without the ':' as key and the next element as value
                 else if (element.Equals(""))    //Count the empty spaces
                     ++countSpaces;
@@ -146,7 +147,7 @@ namespace MTCG_Server {
 
             header = header + "HTTP/1.1 " + statusCode + "\r\n";
             header = header + "Server: 127.0.0.1\r\n";
-            header = header + "Content-Type: " + contentType + "\r\n";
+            header = header + "Content-ElementType: " + contentType + "\r\n";
             header = header + "Accept-Ranges: bytes\r\n";
             header = header + "Content-Length: " + contentLength + "\r\n\r\n";
 

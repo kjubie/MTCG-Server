@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG_Server {
-    class User {
+    public class User {
         public string name { get; set; }
+
+        private string password;
         public int credits { get; set; }
         public int elo { get; set; }
 
@@ -14,6 +16,8 @@ namespace MTCG_Server {
         Deck battleDeck;
         Stack collection;
         Stack notCollectedCards;
+
+        UserConnection uc;
 
         string token;
         public int inBattle { get; set; }
@@ -28,13 +32,13 @@ namespace MTCG_Server {
             notCollectedCards = new Stack();
         }
 
-        public User(string name, int credits, int elo, Stack collection, Stack notCollectedCards, Deck deck) {
+        public User(string name, string password, int credits, int elo, Stack collection, Deck deck) {
             this.name = name;
+            this.password = password;
             this.credits = credits;
             this.elo = elo;
             this.deck = deck;
             this.collection = collection;
-            this.notCollectedCards = notCollectedCards;
         }
 
         public void AddCardToCollection(Card card) {
@@ -62,12 +66,24 @@ namespace MTCG_Server {
             return ref deck;
         }
 
+        public ref Stack GetStack() {
+            return ref collection;
+        }
+
         public ref Deck GetBattleDeck() {
             return ref battleDeck;
         }
 
         public void SetBattleDeck(Deck deck) {
             battleDeck = deck;
+        }
+
+        public string getPassword() {
+            return password;
+        }
+
+        public void setPassword(string password) {
+            this.password = password;
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG_Server {
-    class Kraken : Race {
+    public class Kraken : Race {
         public Kraken() {
             race = "kraken";
             text = "Krakens dont know what spells are.";
@@ -15,7 +15,6 @@ namespace MTCG_Server {
                 calcDamage = 0;
             else
                 calcDamage = opposingCard.damage;
-            }
         }
     }
 }

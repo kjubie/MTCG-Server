@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG_Server {
-    class Knight : Race {
+    public class Knight : Race {
         public Knight() {
             race = "knight";
             text = "Knights instantly drown in water spells.";

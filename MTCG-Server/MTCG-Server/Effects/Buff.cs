@@ -5,11 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG_Server {
-    class Buff : Effect {
+    public class Buff : Effect {
         int buffValue;
 
         public Buff() {
             buffValue = 15;
+            name = "Buff";
+            text = "The next Monster you play gets + " + buffValue + " attack.";
+        }
+
+        public Buff(int buffValue) {
+            this.buffValue = buffValue;
             name = "Buff";
             text = "The next Monster you play gets + " + buffValue + " attack.";
         }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG_Server {
-    class CardInStack {
+    public class CardInStack {
         Card card;
         int isInStore;
         int isInDeck;
@@ -58,6 +58,10 @@ namespace MTCG_Server {
             else
                 return -1;
             return 0;
+        }
+
+        public Card GetCard() {
+            return card;
         }
     }
 }

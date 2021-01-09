@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG_Server {
-    class OnFire : Effect {
+    public class OnFire : Effect {
         public OnFire() {
             name = "OnFire";
-            text = "After Combat, I permanently loose 10 attack, if my Type is fire I gain 10 attack instead.";
+            text = "After Combat, I permanently loose 10 attack, if my ElementType is fire I gain 10 attack instead.";
         }
 
         public OnFire(string name, string text) {

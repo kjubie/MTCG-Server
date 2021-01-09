@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG_Server {
-    class Silence : Effect {
+    public class Silence : Effect {
         public Silence() {
             name = "Silence";
             text = "Remove all effects from the target for the rest of the game.";

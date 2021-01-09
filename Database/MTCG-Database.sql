@@ -32,29 +32,16 @@ create table if not exists card (
 	foreign key (raceName) references race(raceName)
 );
 
-create table if not exists stack (
-	stackId serial primary key,
-	username varchar(24),
-	foreign key (username) references mtcguser(username)
-);
-
-create table if not exists cardInStack (
-	stackId serial,
-	cardName varchar(24),
-	primary key (stackId, cardName),
-	foreign key (stackId) references stack(stackId),
+create table if not exists stackCards (
+	userName varchar(24),
+	cardName varchar(24) unique,
+	foreign key (userName) references mtcguser(userName),
 	foreign key (cardName) references card(cardName)
 );
 
-create table if not exists deck (
-	username varchar(24) primary key,
-	foreign key (username) references mtcguser(username)
-);
-
-create table if not exists cardInDeck (
+create table if not exists deckCards (
 	username varchar(24),
-	cardName varchar(24),
-	primary key (username, cardName),
-	foreign key (username) references deck(username),
-	foreign key (cardName) references card(cardName)
+	cardName varchar(24) unique,
+	foreign key (username) references mtcguser(username),
+	foreign key (cardName) references stackCards(cardName)
 );

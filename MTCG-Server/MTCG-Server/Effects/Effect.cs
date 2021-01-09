@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG_Server {
-    abstract class Effect {
+    public abstract class Effect {
         public string name { get; set; }
         public string text { get; set; }
         public abstract void DoBeforeEffect(ref Card opposingCard, ref Card me);

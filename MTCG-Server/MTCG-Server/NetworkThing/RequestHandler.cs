@@ -68,13 +68,13 @@ namespace MTCG_Server {
          */
         private void Post(string msg) {
             try {
-                if (RC.values["Content-Type"].Equals("text/plain;") || RC.values["Content-Type"].Equals("text/plain"))    //Check if content type is 'text/plain'
+                if (RC.values["Content-ElementType"].Equals("text/plain;") || RC.values["Content-ElementType"].Equals("text/plain"))    //Check if content type is 'text/plain'
                     if (MH.AddMessage(msg) == 0)
                         TcpL.SendResponse(200, "text/plain", "Message sent!");  //Return success to client
                     else
                         TcpL.SendResponse(500, "text/plain", "Something went wrong!");
                 else
-                    TcpL.SendResponse(400, "text/plain", "Bad Content Type!");  //Return error when content type is not 'text/plain'
+                    TcpL.SendResponse(400, "text/plain", "Bad Content ElementType!");  //Return error when content type is not 'text/plain'
 
             } catch {
                 TcpL.SendResponse(400, "text/plain", "Bad Request!"); //Return error on bad request
@@ -92,13 +92,13 @@ namespace MTCG_Server {
             if (resource.Contains("/message/")) {   //Check if resource is correct (I just noticed: '127.0.0.1/wdsahfhh/message/1' would also work but then the code below would return an error so it doesnt)
                 string[] splited = resource.Split('/'); //Split the resource at '/' 
                 try {
-                    if (RC.values["Content-Type"].Equals("text/plain;") || RC.values["Content-Type"].Equals("text/plain"))    //Check if content type is 'text/plain'
+                    if (RC.values["Content-ElementType"].Equals("text/plain;") || RC.values["Content-ElementType"].Equals("text/plain"))    //Check if content type is 'text/plain'
                         if (MH.UpdateMessage(int.Parse(splited[2]), msg) == 0)  //Update message
                             TcpL.SendResponse(200, "text/plain", "Updated Message!");   //Send success to client
                         else
                             TcpL.SendResponse(404, "text/plain", "Message Does Not Exist!");    //Send error to client if message does not exist
                     else
-                        TcpL.SendResponse(400, "text/plain", "Bad Content Type!");  //Send error to client if content type is bad
+                        TcpL.SendResponse(400, "text/plain", "Bad Content ElementType!");  //Send error to client if content type is bad
 
                 } catch {
                     TcpL.SendResponse(404, "text/plain", "Invalid Message ID!");    //Send error to client if message id is invalid

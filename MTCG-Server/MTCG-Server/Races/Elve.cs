@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG_Server {
-    class Elve : Race {
+    public class Elve : Race {
         public Elve() {
             race = "elve";
             text = "Elves can dodge the attacks of dragons.";

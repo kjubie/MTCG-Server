@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG_Server {
-    class DoublePower : Effect {
+    public class DoublePower : Effect {
         public DoublePower() {
             name = "DoublePower";
             text = "When I kill another monster, double my power for the rest of the game.";

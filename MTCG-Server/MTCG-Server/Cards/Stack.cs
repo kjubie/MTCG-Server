@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG_Server {
-    class Stack {
+    public class Stack {
         private Dictionary<string, CardInStack> cards;
 
         public Stack() {
@@ -22,6 +22,10 @@ namespace MTCG_Server {
 
         public void RemoveCard(string name) {
             cards.Remove(name);
+        }
+
+        public void GetCards(out Dictionary<string, CardInStack> cards) {
+            cards = this.cards;
         }
     }
 }
