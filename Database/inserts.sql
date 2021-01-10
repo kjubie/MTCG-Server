@@ -92,7 +92,7 @@ insert into card values('Dragon Baby', 15, 'fire', 'SetOnFire,DoublePower', 1, '
 insert into card values('Deep sea Serpent', 50, 'water', 'DoublePower', 1, 'Dragon');
 insert into card values('Forest Dragon', 30, 'grass', '25,DoublePower', 1, 'Dragon');
 insert into card values('Eragon the First', 75, 'fire', 'SetOnFire,DoublePower', 1, 'Dragon');
-insert into card values('Sulafet', 60, 'Normal', 'DoublePower,Spellshield', 1, 'Dragon');
+insert into card values('Sulafet', 60, 'normal', 'DoublePower,Spellshield', 1, 'Dragon');
 
 insert into card values('Elven Spearman', 20, 'normal', '-', 1, 'Elve');
 insert into card values('Wardancer', 25, 'normal', 'DoublePower,Spellshield', 1, 'Elve');

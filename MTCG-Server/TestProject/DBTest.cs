@@ -1,65 +1,65 @@
-﻿using NUnit.Framework;
+﻿using MTCG_Server;
+using NUnit.Framework;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG_ServerTest {
     public class DBTest {
-        public HttpClient client;
+        DBConnector dbcon;
+        Dictionary<string, Card> cards;
+        Dictionary<string, Card> preselectedCards;
+        Dictionary<string, User> users;
 
         [SetUp]
         public void Setup() {
-            client = new HttpClient();
-            client.PostAsync("http://127.0.0.1:25575/", new StringContent("Hello World!", Encoding.UTF8, "text/plain"));
+            dbcon = new DBConnector("localhost", "postgres", "abru13", "mtcg");
+            cards = new Dictionary<string, Card>();
+            preselectedCards = new Dictionary<string, Card>();
+            users = new Dictionary<string, User>();
+
+            dbcon.LoadCards(ref preselectedCards, new Types());
         }
 
         [Test]
-        public async Task TestDeleteMessage() {
-            _ = client.DeleteAsync("http://127.0.0.1:25575/message/0");
+        public void TestLoadCards() {
+            dbcon.LoadCards(ref cards, new Types());
 
-            HttpResponseMessage responseGet = await client.GetAsync("http://127.0.0.1:25575/message/0");
+            Assert.AreEqual(54, cards.Count);
+            Assert.AreEqual(true, cards.ContainsKey("Imperial Fire Archers"));
+            
+            Card card;
+            cards.TryGetValue("Imperial Fire Archers", out card);
 
-            HttpResponseMessage responseGetAll = await client.GetAsync("http://127.0.0.1:25575/messages");
-            responseGetAll.EnsureSuccessStatusCode();
-
-            string sCodeGet = responseGet.StatusCode.ToString();
-            string responseBodyGet = await responseGet.Content.ReadAsStringAsync();
-
-            string sCodeGetAll = responseGetAll.StatusCode.ToString();
-            string responseBodyGetAll = await responseGetAll.Content.ReadAsStringAsync();
-
-            StringAssert.AreEqualIgnoringCase("NotFound", sCodeGet);
-            StringAssert.AreEqualIgnoringCase("Message Not Found!", responseBodyGet);
-
-            StringAssert.AreEqualIgnoringCase("OK", sCodeGetAll);
-            StringAssert.AreEqualIgnoringCase("No Messages Yet!", responseBodyGetAll);
+            Assert.AreEqual(25, card.damage);
         }
 
         [Test]
-        public async Task TestDeleteBadRequest() {
-            HttpResponseMessage response = await client.DeleteAsync("http://127.0.0.1:25575/messagedeshusguislg");
+        public void TestLoadUsers() {
+            dbcon.LoadUsers(ref users, preselectedCards);
 
-            string sCode = response.StatusCode.ToString();
-            string responseBody = await response.Content.ReadAsStringAsync();
+            Assert.AreEqual(2, users.Count);
+            Assert.AreEqual(true, users.ContainsKey("kjubie"));
 
-            StringAssert.AreEqualIgnoringCase("BadRequest", sCode);
-            StringAssert.AreEqualIgnoringCase("Bad Request!", responseBody);
+            User user;
+            users.TryGetValue("kjubie", out user);
+
+            Assert.AreEqual("123", user.getPassword());
+
+            Dictionary<string, CardInStack> userCards;
+            user.GetStack().GetCards(out userCards);
+
+            Assert.AreEqual(9, userCards.Count);
         }
 
         [Test]
-        public async Task TestDeleteMessageNotExistent() {
-            HttpResponseMessage response = await client.DeleteAsync("http://127.0.0.1:25575/message/32");
-
-            string sCode = response.StatusCode.ToString();
-            string responseBody = await response.Content.ReadAsStringAsync();
-
-            StringAssert.AreEqualIgnoringCase("NotFound", sCode);
-            StringAssert.AreEqualIgnoringCase("Invalid Message ID!", responseBody);
+        public void TestSave() {
+            
         }
 
         [TearDown]
         public void TearDown() {
-            client.DeleteAsync("http://127.0.0.1:25575/message/0");
         }
     }
 }

@@ -6,16 +6,19 @@ using System.Threading;
 
 namespace MTCG_Server {
     public class Program {
+        static Manager MA;
+        static BattleConnection BC;
+        static Listener LT;
         static void Main(string[] args) {
-            Manager ma = new Manager();
+            MA = new Manager();
 
-            BattleConnection BC = new BattleConnection();
+            BC = new BattleConnection();
 
-            Thread ctThread = new Thread(() => BC.StartBattleConnection(ref ma));
+            Thread ctThread = new Thread(() => BC.StartBattleConnection(ref MA));
             ctThread.Start();
 
-            Listener lt = new Listener(ref ma);
-            lt.InitListener();
+            LT = new Listener(ref MA);
+            LT.InitListener();
 
             ctThread.Join();
         }

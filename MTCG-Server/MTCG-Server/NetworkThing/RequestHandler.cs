@@ -9,7 +9,6 @@ namespace MTCG_Server {
         private Listener TcpL { get; set; }
         public RequestContext RC;
         private UserHandler UH;
-        private Battle B;
 
         public RequestHandler(Listener TcpL, RequestContext RC) {
             this.TcpL = TcpL;

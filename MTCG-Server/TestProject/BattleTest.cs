@@ -1,86 +1,180 @@
-﻿using NUnit.Framework;
+﻿using MTCG_Server;
+using NUnit.Framework;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG_ServerTest {
     public class BattleTest {
-        public HttpClient client;
+        DBConnector dbcon;
+        Dictionary<string, Card> cards;
+        Dictionary<string, User> users;
+        Battle B;
+
+        User userA;
+        User userB;
 
         [SetUp]
         public void Setup() {
-            client = new HttpClient();
-            client.PostAsync("http://127.0.0.1:25575/", new StringContent("Hello World!", Encoding.UTF8, "text/plain"));
-            client.PostAsync("http://127.0.0.1:25575/", new StringContent("Hallo Welt!", Encoding.UTF8, "text/plain"));
+            dbcon = new DBConnector("localhost", "postgres", "abru13", "mtcg");
+            cards = new Dictionary<string, Card>();
+            users = new Dictionary<string, User>();
+
+            dbcon.LoadCards(ref cards, new Types());
+            dbcon.LoadUsers(ref users, cards);
+
+            users.TryGetValue("kjubie", out userA);
+            users.TryGetValue("1z3ro37", out userB);
+
+            B = new Battle(ref userA, ref userB);
         }
 
         [Test]
-        public async Task TestPutMessage() {
-            HttpResponseMessage responsePut = await client.PutAsync("http://127.0.0.1:25575/message/0", new StringContent("Hello Earth!", Encoding.UTF8, "text/plain"));
-            responsePut.EnsureSuccessStatusCode();
+        public void TestDraw() {
+            B.StartBattle();
+            B.DrawCards();
 
-            HttpResponseMessage responseGet = await client.GetAsync("http://127.0.0.1:25575/message/0");
-            responseGet.EnsureSuccessStatusCode();
-
-            string sCodePut = responsePut.StatusCode.ToString();
-            string responseBodyPut = await responsePut.Content.ReadAsStringAsync();
-
-            string sCodeGet = responseGet.StatusCode.ToString();
-            string responseBodyGet = await responseGet.Content.ReadAsStringAsync();
-
-            StringAssert.AreEqualIgnoringCase("OK", sCodePut);
-            StringAssert.AreEqualIgnoringCase("Updated Message!", responseBodyPut);
-
-            StringAssert.AreEqualIgnoringCase("OK", sCodeGet);
-            StringAssert.AreEqualIgnoringCase("Hello Earth!", responseBodyGet);
+            Assert.AreEqual(true, userA.handcards[0] != null);
+            Assert.AreEqual(true, userA.handcards[1] != null);
+            Assert.AreEqual(true, userB.handcards[0] != null);
+            Assert.AreEqual(true, userB.handcards[1] != null);
         }
 
         [Test]
-        public async Task TestPutBadContentType() {
-            HttpResponseMessage response = await client.PutAsync("http://127.0.0.1:25575/message/1", new StringContent("<html></html>", Encoding.UTF8, "text/html"));
+        public void TestCombatMonster() {
+            B.StartBattle();
 
-            HttpResponseMessage responseGet = await client.GetAsync("http://127.0.0.1:25575/message/1");
-            responseGet.EnsureSuccessStatusCode();
+            Deck dA = new Deck();
+            dA.AddCard(new MonsterCard("TestCard", new ElementType("fire", "grass", "water"), 30, new Dictionary<string, Effect>(), new Human()));
+            userA.SetBattleDeck(dA);
 
-            string sCode = response.StatusCode.ToString();
-            string responseBody = await response.Content.ReadAsStringAsync();
+            Deck dB = new Deck();
+            dB.AddCard(new MonsterCard("TestCard", new ElementType("fire", "grass", "water"), 20, new Dictionary<string, Effect>(), new Human()));
+            userB.SetBattleDeck(dB);
 
-            string sCodeGet = responseGet.StatusCode.ToString();
-            string responseBodyGet = await responseGet.Content.ReadAsStringAsync();
+            Card cA = userA.GetBattleDeck().GetCard("TestCard");
+            Card cB = userB.GetBattleDeck().GetCard("TestCard");
 
-            StringAssert.AreEqualIgnoringCase("BadRequest", sCode);
-            StringAssert.AreEqualIgnoringCase("Bad Content Type!", responseBody);
+            B.MatchCards(cA, cB);
 
-            StringAssert.AreEqualIgnoringCase("OK", sCodeGet);
-            StringAssert.AreEqualIgnoringCase("Hallo Welt!", responseBodyGet);
+            Dictionary<string, Card> cardsA;
+            userA.GetBattleDeck().GetCards(out cardsA);
+
+            Dictionary<string, Card> cardsB;
+            userB.GetBattleDeck().GetCards(out cardsB);
+
+            Assert.AreEqual(3, cardsA.Count); //Es sollten eigentlich 2 und 0 Karten sein aber da die Karten beim Draw aus dem Deck entfernt werden und nach der Runde beim Gewinner wieder
+            Assert.AreEqual(1, cardsB.Count); //hinzugefüght werden und hier Draw nicht aufgerufen wird, werden die Karten hinzugefüght aber nicht entfernt. Also sind 3 und 1. Wörkt trotzdem so wie es soll. 
         }
 
         [Test]
-        public async Task TestPutBadRequest() {
-            HttpResponseMessage response = await client.PutAsync("http://127.0.0.1:25575/messagedeshusguislg", new StringContent("Text", Encoding.UTF8, "text/plain"));
+        public void TestCombatSpell() {
+            B.StartBattle();
 
-            string sCode = response.StatusCode.ToString();
-            string responseBody = await response.Content.ReadAsStringAsync();
+            Deck dA = new Deck();
+            dA.AddCard(new SpellCard("TestCard", new ElementType("fire", "grass", "water"), 20, new Dictionary<string, Effect>()));
+            userA.SetBattleDeck(dA);
 
-            StringAssert.AreEqualIgnoringCase("BadRequest", sCode);
-            StringAssert.AreEqualIgnoringCase("Bad Request!", responseBody);
+            Deck dB = new Deck();
+            dB.AddCard(new MonsterCard("TestCard", new ElementType("grass", "water", "fire"), 30, new Dictionary<string, Effect>(), new Human()));
+            userB.SetBattleDeck(dB);
+
+            Card cA = userA.GetBattleDeck().GetCard("TestCard");
+            Card cB = userB.GetBattleDeck().GetCard("TestCard");
+
+            B.MatchCards(cA, cB);
+
+            Dictionary<string, Card> cardsA;
+            userA.GetBattleDeck().GetCards(out cardsA);
+
+            Dictionary<string, Card> cardsB;
+            userB.GetBattleDeck().GetCards(out cardsB);
+
+            Assert.AreEqual(3, cardsA.Count); //Es sollten eigentlich 2 und 0 Karten sein aber da die Karten beim Draw aus dem Deck entfernt werden und nach der Runde beim Gewinner wieder
+            Assert.AreEqual(1, cardsB.Count); //hinzugefüght werden und hier Draw nicht aufgerufen wird, werden die Karten hinzugefüght aber nicht entfernt. Also sind 3 und 1. Wörkt trotzdem so wie es soll. 
         }
 
         [Test]
-        public async Task TestPutMessageNotExistent() {
-            HttpResponseMessage response = await client.PutAsync("http://127.0.0.1:25575/message/32", new StringContent("Text", Encoding.UTF8, "text/plain"));
+        public void TestSilence() {
+            B.StartBattle();
 
-            string sCode = response.StatusCode.ToString();
-            string responseBody = await response.Content.ReadAsStringAsync();
+            Silence effectA = new Silence();
 
-            StringAssert.AreEqualIgnoringCase("NotFound", sCode);
-            StringAssert.AreEqualIgnoringCase("Message Does Not Exist!", responseBody);
+            Dictionary<string, Effect> effectsA = new Dictionary<string, Effect>();
+            effectsA.Add("Silence", effectA);
+
+            OnFire effectB = new OnFire();
+
+            Dictionary<string, Effect> effectsB = new Dictionary<string, Effect>();
+            effectsB.Add("OnFire", effectB);
+
+            Deck dA = new Deck();
+            dA.AddCard(new SpellCard("TestSpell", new ElementType("fire", "grass", "water"), 40, effectsA));
+            userA.SetBattleDeck(dA);
+
+            Deck dB = new Deck();
+            dB.AddCard(new MonsterCard("TestMonster", new ElementType("grass", "water", "fire"), 30, effectsB, new Human()));
+            userB.SetBattleDeck(dB);
+
+            Card cA = userA.GetBattleDeck().GetCard("TestSpell");
+            Card cB = userB.GetBattleDeck().GetCard("TestMonster");
+
+            userA.SetBattleDeck(new Deck());
+            userB.SetBattleDeck(new Deck());
+
+            B.MatchCards(cA, cB);
+
+            Dictionary<string, Card> cardsA;
+            userA.GetBattleDeck().GetCards(out cardsA);
+
+            Dictionary<string, Card> cardsB;
+            userB.GetBattleDeck().GetCards(out cardsB);
+
+            cardsA.TryGetValue("TestMonster", out Card c);
+
+            Assert.AreEqual(0, c.effects.Count); //Es sollten eigentlich 2 und 0 Karten sein aber da die Karten beim Draw aus dem Deck entfernt werden und nach der Runde beim Gewinner wieder
+        }
+
+        [Test]
+        public void TestUndead() {
+            B.StartBattle();
+
+            Undead effectA = new Undead();
+
+            Dictionary<string, Effect> effectsA = new Dictionary<string, Effect>();
+            effectsA.Add("Undead", effectA);
+
+            Deck dA = new Deck();
+            dA.AddCard(new MonsterCard("TestUndead", new ElementType("fire", "grass", "water"), 40, effectsA, new Human()));
+            userA.SetBattleDeck(dA);
+
+            Deck dB = new Deck();
+            dB.AddCard(new MonsterCard("TestMonster", new ElementType("grass", "water", "fire"), 30, new Dictionary<string, Effect>(), new Human()));
+            userB.SetBattleDeck(dB);
+
+            Card cA = userA.GetBattleDeck().GetCard("TestUndead");
+            Card cB = userB.GetBattleDeck().GetCard("TestMonster");
+
+            userA.SetBattleDeck(new Deck());
+            userB.SetBattleDeck(new Deck());
+
+            B.MatchCards(cA, cB);
+
+            Dictionary<string, Card> cardsA;
+            userA.GetBattleDeck().GetCards(out cardsA);
+
+            Assert.AreEqual(1, cardsA.Count); //Es sollten eigentlich 2 und 0 Karten sein aber da die Karten beim Draw aus dem Deck entfernt werden und nach der Runde beim Gewinner wieder
+        }
+
+        [Test]
+        public void TestEnd() {
+
         }
 
         [TearDown]
         public void TearDown() {
-            client.DeleteAsync("http://127.0.0.1:25575/message/1");
-            client.DeleteAsync("http://127.0.0.1:25575/message/0");
+
         }
     }
 }

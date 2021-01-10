@@ -1,82 +1,113 @@
+using MTCG_Server;
 using NUnit.Framework;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG_ServerTest {
     public class EffectsTest {
-        public HttpClient client;
+        Card opposingCard;
+        Card me;
 
         [SetUp]
         public void Setup() {
-            client = new HttpClient();
-
-            client.PostAsync("http://127.0.0.1:25575/", new StringContent("Hello World!", Encoding.UTF8, "text/plain"));
-            client.PostAsync("http://127.0.0.1:25575/", new StringContent("Hallo Welt!", Encoding.UTF8, "text/plain"));
+            opposingCard = new MonsterCard("TestCard", new ElementType("fire", "grass", "water"), 20, new Dictionary<string, Effect>(), new Human());
         }
 
         [Test]
-        public async Task TestGetAll() {
-            HttpResponseMessage response = await client.GetAsync("http://127.0.0.1:25575/messages");
-            response.EnsureSuccessStatusCode();
+        public void TestOnFire() {
+            OnFire effect = new OnFire();
 
-            string sCode = response.StatusCode.ToString();
-            string responseBody = await response.Content.ReadAsStringAsync();
+            Dictionary<string, Effect> effects = new Dictionary<string, Effect>();
+            effects.Add("OnFire", effect);
 
-            StringAssert.AreEqualIgnoringCase("OK", sCode);
-            StringAssert.AreEqualIgnoringCase("Hello World!\nHallo Welt!\n", responseBody);
+            me = new MonsterCard("TestCard", new ElementType("fire", "grass", "water"), 20, effects, new Human());
+            effect.DoAfterEffect(ref opposingCard, 0, ref me, 0, out int dm);
+            Assert.AreEqual(35, me.damage);
+
+            me = new MonsterCard("TestCard", new ElementType("normal", "-", "-"), 20, effects, new Human());
+            effect.DoAfterEffect(ref opposingCard, 0, ref me, 0, out dm);
+            Assert.AreEqual(5, me.damage);
         }
 
         [Test]
-        public async Task TestGetMessage0() {
-            HttpResponseMessage response = await client.GetAsync("http://127.0.0.1:25575/message/0");
-            response.EnsureSuccessStatusCode();
+        public void TestSetOnFire() {
+            SetOnFire effect = new SetOnFire();
 
-            string sCode = response.StatusCode.ToString();
-            string responseBody = await response.Content.ReadAsStringAsync();
+            Dictionary<string, Effect> effects = new Dictionary<string, Effect>();
+            effects.Add("SetOnFire", effect);
 
-            StringAssert.AreEqualIgnoringCase("OK", sCode);
-            StringAssert.AreEqualIgnoringCase("Hello World!", responseBody);
+            me = new MonsterCard("TestCard", new ElementType("fire", "grass", "water"), 20, effects, new Human());
+            effect.DoAfterEffect(ref opposingCard, 0, ref me, 0, out int dm);
+            Assert.AreEqual(true, opposingCard.effects.ContainsKey("OnFire"));
         }
 
         [Test]
-        public async Task TestGetMessage1() {
-            HttpResponseMessage response = await client.GetAsync("http://127.0.0.1:25575/message/1");
-            response.EnsureSuccessStatusCode();
+        public void TestOverWhelm() {
+            Overwehlm effect = new Overwehlm();
 
-            string sCode = response.StatusCode.ToString();
-            string responseBody = await response.Content.ReadAsStringAsync();
+            Dictionary<string, Effect> effects = new Dictionary<string, Effect>();
+            effects.Add("Overwehlm", effect);
 
-            StringAssert.AreEqualIgnoringCase("OK", sCode);
-            StringAssert.AreEqualIgnoringCase("Hallo Welt!", responseBody);
+            me = new MonsterCard("TestCard", new ElementType("fire", "grass", "water"), 40, effects, new Human());
+            effect.DoAfterEffect(ref opposingCard, opposingCard.damage, ref me, me.damage, out int dm);
+            Assert.AreEqual(20, dm);
         }
 
         [Test]
-        public async Task TestGetMessageNotExistent() {
-            HttpResponseMessage response = await client.GetAsync("http://127.0.0.1:25575/message/34");
+        public void TestBuff() {
+            Buff effect = new Buff(20);
 
-            string sCode = response.StatusCode.ToString();
-            string responseBody = await response.Content.ReadAsStringAsync();
+            Dictionary<string, Effect> effects = new Dictionary<string, Effect>();
+            effects.Add("Buff", effect);
 
-            StringAssert.AreEqualIgnoringCase("NotFound", sCode);
-            StringAssert.AreEqualIgnoringCase("Message Not Found!", responseBody);
+            me = new MonsterCard("TestCard", new ElementType("fire", "grass", "water"), 20, effects, new Human());
+            effect.DoAfterEffect(ref opposingCard, opposingCard.damage, ref me, me.damage, out int dm);
+            Assert.AreEqual(20, dm);
         }
 
         [Test]
-        public async Task TestGetBadResource() {
-            HttpResponseMessage response = await client.GetAsync("http://127.0.0.1:25575/messagewds/jsahfa");
+        public void TestSpellshield() {
+            Card spell = new SpellCard("TestCard", new ElementType("normal", "-", "-"), 20, new Dictionary<string, Effect>());
 
-            string sCode = response.StatusCode.ToString();
-            string responseBody = await response.Content.ReadAsStringAsync();
+            Spellshield effect = new Spellshield();
 
-            StringAssert.AreEqualIgnoringCase("BadRequest", sCode);
-            StringAssert.AreEqualIgnoringCase("Bad Request!", responseBody);
+            Dictionary<string, Effect> effects = new Dictionary<string, Effect>();
+            effects.Add("Spellshield", effect);
+
+            me = new MonsterCard("TestCard", new ElementType("fire", "grass", "water"), 40, effects, new Human());
+            effect.DoBeforeEffect(ref spell, ref me);
+            Assert.AreEqual(10, spell.damage);
+        }
+
+        [Test]
+        public void TestNegateType() {
+            NegateType effect = new NegateType();
+
+            Dictionary<string, Effect> effects = new Dictionary<string, Effect>();
+            effects.Add("NegateType", effect);
+
+            me = new MonsterCard("TestCard", new ElementType("fire", "grass", "water"), 40, effects, new Human());
+            effect.DoBeforeEffect(ref opposingCard, ref me);
+            Assert.AreEqual("normal", opposingCard.type.name);
+        }
+
+        [Test]
+        public void TestDoublePower() {
+            DoublePower effect = new DoublePower();
+
+            Dictionary<string, Effect> effects = new Dictionary<string, Effect>();
+            effects.Add("DoublePower", effect);
+
+            me = new MonsterCard("TestCard", new ElementType("fire", "grass", "water"), 40, effects, new Human());
+            effect.DoAfterEffect(ref opposingCard, opposingCard.damage, ref me, me.damage, out int dm);
+            Assert.AreEqual(80, me.damage);
         }
 
         [TearDown]
         public void TearDown() {
-            client.DeleteAsync("http://127.0.0.1:25575/message/1");
-            client.DeleteAsync("http://127.0.0.1:25575/message/0");
+            
         }
     }
 }

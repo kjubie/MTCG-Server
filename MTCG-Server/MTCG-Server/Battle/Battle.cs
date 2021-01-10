@@ -95,8 +95,8 @@ namespace MTCG_Server {
         }
 
         public void MatchCards(Card user_a_card, Card user_b_card) {
-            int user_a_calcDamage = 0;
-            int user_b_calcDamage = 0;
+            int user_a_calcDamage;
+            int user_b_calcDamage;
 
             if (user_a_card.effects.ContainsKey("Silence") && user_b_card.effects.ContainsKey("Silence")) {
                 user_a_card.effects.TryGetValue("Silence", out Effect e_user_a);
@@ -128,7 +128,6 @@ namespace MTCG_Server {
                 user_a_calcDamage = user_a_card.damage;
                 user_b_calcDamage = user_b_card.damage;
 
-                Console.WriteLine("Hallo Spells");
                 if (user_a_card.type.name.Equals(user_b_card.type.weak)) {
                     user_a_calcDamage *= 2;
                     user_b_calcDamage /= 2;
@@ -184,7 +183,19 @@ namespace MTCG_Server {
         }
 
         public void ReturnCardToDeck(Card card, ref User user) {
-            user.GetBattleDeck().AddCard(card);
+            try {
+                user.GetBattleDeck().AddCard(card);
+            } catch {
+                for (int i = 0; i < 10; ++i) {
+                    try {
+                        card.name = card.name + i;
+                        user.GetBattleDeck().AddCard(card);
+                        break;
+                    } catch {
+
+                    }
+                }
+            }
         }
 
         public void EndBattle(int draw, ref User winner, ref User loser) {
@@ -200,6 +211,7 @@ namespace MTCG_Server {
                 
                 winner.elo += 5;
                 winner.wins += 1;
+                winner.credits += 1;
 
                 loser.elo -= 10;
                 loser.losses += 1;

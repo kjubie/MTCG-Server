@@ -1,45 +1,63 @@
-﻿using NUnit.Framework;
+﻿using MTCG_Server;
+using NUnit.Framework;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG_ServerTest {
     public class TypeTest {
-        public HttpClient client;
+        Types t;
+
 
         [SetUp]
         public void Setup() {
-            client = new HttpClient();
+            t = new Types();
             
         }
 
         [Test]
-        public async Task TestPostMessage() {
-            HttpResponseMessage response = await client.PostAsync("http://127.0.0.1:25575/", new StringContent("Hello World!", Encoding.UTF8, "text/plain"));
-            response.EnsureSuccessStatusCode();
+        public void TestFire() {
+            ElementType type;
+            t.types.TryGetValue("fire", out type);
 
-            string sCode = response.StatusCode.ToString();
-            string responseBody = await response.Content.ReadAsStringAsync();
-
-            StringAssert.AreEqualIgnoringCase("OK", sCode);
-            StringAssert.AreEqualIgnoringCase("Message sent!", responseBody);
+            Assert.AreEqual("fire", type.name);
+            Assert.AreEqual("grass", type.strong);
+            Assert.AreEqual("water", type.weak);
         }
 
         [Test]
-        public async Task TestPostBadContentType() {
-            HttpResponseMessage response = await client.PostAsync("http://127.0.0.1:25575/", new StringContent("<html></html>", Encoding.UTF8, "text/html"));
+        public void TestWater() {
+            ElementType type;
+            t.types.TryGetValue("water", out type);
 
-            string sCode = response.StatusCode.ToString();
-            string responseBody = await response.Content.ReadAsStringAsync();
-
-            StringAssert.AreEqualIgnoringCase("BadRequest", sCode);
-            StringAssert.AreEqualIgnoringCase("Bad Content Type!", responseBody);
+            Assert.AreEqual("water", type.name);
+            Assert.AreEqual("fire", type.strong);
+            Assert.AreEqual("grass", type.weak);
         }
 
+        [Test]
+        public void TestGrass() {
+            ElementType type;
+            t.types.TryGetValue("grass", out type);
+
+            Assert.AreEqual("grass", type.name);
+            Assert.AreEqual("water", type.strong);
+            Assert.AreEqual("fire", type.weak);
+        }
+
+        [Test]
+        public void TestNormal() {
+            ElementType type;
+            t.types.TryGetValue("normal", out type);
+
+            Assert.AreEqual("normal", type.name);
+            Assert.AreEqual("-", type.strong);
+            Assert.AreEqual("-", type.weak);
+        }
 
         [TearDown]
         public void TearDown() {
-            client.DeleteAsync("http://127.0.0.1:25575/message/0");
+            
         }
     }
 }
