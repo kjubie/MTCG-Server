@@ -17,6 +17,9 @@ namespace MTCG_Server {
         Deck battleDeck;
         Stack collection;
 
+        public Card[] handcards = new Card[2];
+        public int pick = -1;
+
         string token;
         public int inBattle { get; set; }
         public int online { get; set; }
@@ -177,11 +180,12 @@ namespace MTCG_Server {
         }
 
         public string ShowStats() {
-            string stats = "\n Your Stats:";
+            string stats = "\n Stats:";
 
+            stats += "\n Username: " + name;
             stats += "\n Credits: " + credits;
             stats += "\n Elo: " + elo;
-            stats += "\n Today Games: " + wins + " wins, " + losses + "losses";
+            stats += "\n Today Games: " + wins + " wins, " + losses + " losses";
 
             return stats;
         }

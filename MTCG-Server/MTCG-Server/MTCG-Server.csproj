@@ -83,7 +83,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Battle\Battle.cs" />
-    <Compile Include="Battle\BattleLogic.cs" />
+    <Compile Include="Battle\BattleConnection.cs" />
+    <Compile Include="Battle\BattleHandler.cs" />
     <Compile Include="Cards\Card.cs" />
     <Compile Include="Cards\CardInStack.cs" />
     <Compile Include="Cards\Deck.cs" />
@@ -107,8 +108,6 @@
     <Compile Include="Effects\Silence.cs" />
     <Compile Include="Effects\Spellshield.cs" />
     <Compile Include="Types\ElementType.cs" />
-    <Compile Include="NetworkThing\Message.cs" />
-    <Compile Include="NetworkThing\MessageHandler.cs" />
     <Compile Include="Cards\MonsterCard.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

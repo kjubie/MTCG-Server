@@ -99,7 +99,6 @@ namespace MTCG_Server {
 
         public int AuthorizeUser(RequestHandler rh, out string resMassage, out string userAuth) {
             userAuth = "";
-            resMassage = "";
 
             string tokenAuth;
             if (rh.RC.values.TryGetValue("Authorization", out tokenAuth)) {
@@ -111,6 +110,32 @@ namespace MTCG_Server {
                 User user;
                 if(ma.Users.TryGetValue(split[0], out user)) {
                     Console.WriteLine("AuthToken: " + user.GetToken());
+                    if (user.online == 0) {
+                        resMassage = "You need to login first!";
+                        return -1;
+                    }
+
+                    if (user.GetToken().Equals(tokenAuth)) {
+                        userAuth = user.name;
+                        resMassage = "Authorized!";
+                        return 0;
+                    }
+                }
+            }
+
+            resMassage = "Authoriziaton Failed!";
+            return -1;
+        }
+
+        public int AuthorizeUser(BattleHandler bh, out string resMassage, out string userAuth) {
+            userAuth = "";
+
+            string tokenAuth;
+            if (bh.RC.values.TryGetValue("Authorization", out tokenAuth)) {
+                string[] split = tokenAuth.Split('-');
+
+                User user;
+                if (ma.Users.TryGetValue(split[0], out user)) {
                     if (user.online == 0) {
                         resMassage = "You need to login first!";
                         return -1;

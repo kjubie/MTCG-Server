@@ -15,24 +15,17 @@ namespace MTCG_Server {
         private RequestHandler RH;
         private RequestContext RC;
         private Socket client;
-        private MessageHandler MH;
         public Manager ma;
 
-        public Listener(MessageHandler MH, ref Manager ma) {
-            Running = true;
-            this.MH = MH;
-            this.ma = ma;
-        }
-
         public Listener(ref Manager ma) {
+            Running = true;
             this.ma = ma;
         }
 
-        public Listener(string addr, int port, MessageHandler MH) {
+        public Listener(string addr, int port) {
             Running = true;
             Addr = IPAddress.Parse(addr);
             Port = port;
-            this.MH = MH;
         }
 
         /*
@@ -57,7 +50,7 @@ namespace MTCG_Server {
                     if (client.Connected) {
                         BuildContext(ReceiveRequest());
                         
-                        RH = new RequestHandler(this, MH, RC);
+                        RH = new RequestHandler(this, RC);
                         RH.DoRequest();
                     }
 

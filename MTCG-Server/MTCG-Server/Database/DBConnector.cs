@@ -99,12 +99,14 @@ namespace MTCG_Server {
 
                 user.Value.GetStack().GetCards(out Dictionary<string, CardInStack> cardsStack);
                 foreach (var stackCard in cardsStack) {
+                    Console.WriteLine("insert into stackCards values ('" + user.Value.name + "', '" + stackCard.Value.GetCard().name + "') on conflict(cardname) do nothing");
                     cmdUser.CommandText = "insert into stackCards values ('" + user.Value.name + "', '" + stackCard.Value.GetCard().name + "') on conflict(cardname) do nothing";
                     cmdUser.ExecuteNonQuery();
                 }
 
                 user.Value.GetDeck().GetCards(out Dictionary<string, Card> cardsDeck);
                 foreach (var deckCard in cardsDeck) {
+                    Console.WriteLine("insert into deckCards values ('" + user.Value.name + "', '" + deckCard.Value.name + "') on conflict(cardname) do nothing");
                     cmdUser.CommandText = "insert into deckCards values ('" + user.Value.name + "', '" + deckCard.Value.name + "') on conflict(cardname) do nothing";
                     cmdUser.ExecuteNonQuery();
                 }

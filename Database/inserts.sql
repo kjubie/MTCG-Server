@@ -43,6 +43,12 @@ insert into card values('Vulcan Shower', 50, 'fire', '-', 0, '-');
 insert into card values('Sneaky Stabbyn', 30, 'normal', '10', 0, '-');
 insert into card values('Cursefire Staff', 10, 'fire', '15,Silence,SetOnFire', 0, '-');
 insert into card values('Grass Cannon', 100, 'grass', '-40', 0, '-');
+insert into card values('Sneaky Stabbyn', 30, 'normal', '10', 0, '-');
+insert into card values('Cursefire Staff', 10, 'fire', '15,Silence,SetOnFire', 0, '-');
+insert into card values('Grass Cannon', 100, 'grass', '-40', 0, '');
+insert into card values('Etharnal Hunger', 75, 'water', '-', 0, '-');
+insert into card values('Life sucking Tentecals', 25, 'water', '25', 0, '-');
+insert into card values('Down to the Ground', 60, 'water', 'Silence', 0, '-');
 
 -- Monster
 insert into card values('Angry Mob', 20, 'normal', '-', 1, 'Human');
@@ -68,26 +74,32 @@ insert into card values('Da Gobbos', 10, 'normal', '25', 1, 'Goblin');
 insert into card values('Night Gobbos', 15, 'normal', '25', 1, 'Goblin');
 insert into card values('Forest Gobbos', 20, 'grass', '20', 1, 'Goblin');
 insert into card values('Gobsnik the Stabba', 25, 'normal', 'NegateType,15', 1, 'Goblin');
-insert into card values('Gröm the Punsch', 60, 'normal', '-20', 1, 'Goblin');
+insert into card values('Grom the Punsch', 60, 'normal', '-20', 1, 'Goblin');
 
-insert into card values('', 0, '', '-', 1, 'Elve');
-insert into card values('', 0, '', '-', 1, 'Elve');
-insert into card values('', 0, '', '-', 1, 'Elve');
-insert into card values('', 0, '', '-', 1, 'Elve');
-insert into card values('', 0, '', '-', 1, 'Elve');
-insert into card values('', 0, '', '-', 1, 'Elve');
+insert into card values('Kraken of the deep', 30, 'water', '-', 1, 'Kraken');
+insert into card values('Skysquid', 15, 'normal', '25,Silence', 1, 'Kraken');
+insert into card values('Deep sea Vegan', 25, 'grass', 'SetOnFire', 1, 'Kraken');
+insert into card values('Ethernal Kraken King', 75, 'water', 'Undead,Silence', 1, 'Kraken');
+insert into card values('Royal Kraken Guard', 30, 'water', 'DoublePower,NegateType', 1, 'Kraken');
 
-insert into card values('', 0, '', '-', 1, 'Dragon');
-insert into card values('', 0, '', '-', 1, 'Dragon');
-insert into card values('', 0, '', '-', 1, 'Dragon');
-insert into card values('', 0, '', '-', 1, 'Dragon');
-insert into card values('', 0, '', '-', 1, 'Dragon');
+insert into card values('Little Fire Witch', 10, 'fire', 'SetOnFire', 1, 'Wizzard');
+insert into card values('Expierenced Caster', 35, 'grass', 'Spellshield,DoublePower', 1, 'Wizzard');
+insert into card values('Arcane Aqua Sourcerer', 50, 'water', 'Spellshield', 1, 'Wizzard');
+insert into card values('Beltasur Geld', 65, 'normal', 'Spellshield,Silence,Overwehlm', 1, 'Wizzard');
+insert into card values('Aleriul The Lifemage', 55, 'grass', 'Spellshield,Silence,25', 1, 'Wizzard');
 
-insert into card values('', 0, '', '-', 1, 'Wizzard');
-insert into card values('', 0, '', '-', 1, 'Wizzard');
-insert into card values('', 0, '', '-', 1, 'Wizzard');
-insert into card values('', 0, '', '-', 1, 'Wizzard');
-insert into card values('', 0, '', '-', 1, 'Wizzard');
+insert into card values('Dragon Baby', 15, 'fire', 'SetOnFire,DoublePower', 1, 'Dragon');
+insert into card values('Deep sea Serpent', 50, 'water', 'DoublePower', 1, 'Dragon');
+insert into card values('Forest Dragon', 30, 'grass', '25,DoublePower', 1, 'Dragon');
+insert into card values('Eragon the First', 75, 'fire', 'SetOnFire,DoublePower', 1, 'Dragon');
+insert into card values('Sulafet', 60, 'Normal', 'DoublePower,Spellshield', 1, 'Dragon');
+
+insert into card values('Elven Spearman', 20, 'normal', '-', 1, 'Elve');
+insert into card values('Wardancer', 25, 'normal', 'DoublePower,Spellshield', 1, 'Elve');
+insert into card values('High Swordmaster', 40, 'normal', 'NegateType', 1, 'Elve');
+insert into card values('Aleth Anag', 75, 'normal', 'Silence,Spellshield', 1, 'Elve');
+insert into card values('Imruck Dragonborn', 100, 'fire', 'DoublePower,Spellshield', 1, 'Elve');
+insert into card values('Kjubie the Phoenixking', 250, 'fire', 'Overwehlm,DoublePower,Spellshield,Silence,NegateType', 1, 'Elve');
 
 insert into mtcguser values ('kjubie', '123', 10, 100);
 insert into stackcards values ('kjubie', 'Citrus the Bold');
@@ -99,3 +111,5 @@ insert into deckcards values ('kjubie', 'Citrus the Bold');
 insert into deckcards values ('kjubie', 'Imperial Fire Archers');
 insert into deckcards values ('kjubie', 'Leader Of the Deep');
 insert into deckcards values ('kjubie', 'Fire Arrow Rain');
+
+insert into mtcguser values ('1z3ro37', '123', 10, 100);

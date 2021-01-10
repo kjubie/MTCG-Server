@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG_ServerTest {
-    public class PutTest {
+    public class BattleTest {
         public HttpClient client;
 
         [SetUp]

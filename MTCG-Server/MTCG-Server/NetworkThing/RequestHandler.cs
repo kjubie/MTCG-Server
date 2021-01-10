@@ -7,13 +7,12 @@ using System.Threading.Tasks;
 namespace MTCG_Server {
     public class RequestHandler {
         private Listener TcpL { get; set; }
-        private MessageHandler MH;
         public RequestContext RC;
         private UserHandler UH;
+        private Battle B;
 
-        public RequestHandler(Listener TcpL, MessageHandler MH, RequestContext RC) {
+        public RequestHandler(Listener TcpL, RequestContext RC) {
             this.TcpL = TcpL;
-            this.MH = MH;
             this.RC = RC;
             UH = new UserHandler(ref TcpL.ma);
         }
@@ -45,16 +44,23 @@ namespace MTCG_Server {
          *      - resource: Requested resource
          */
         private void Get(string resource) {
-            string resMassage;
+            string resMassage = "";
             string username;
 
-            if (resource.Contains("/users")) {
+            if (resource.Equals("/users")) {
                 List<string> keyList = new List<string>(TcpL.ma.Users.Keys);
                 foreach (var l in keyList)
-                    Console.WriteLine("Key: " + l);
-            }
-
-            if (resource.Equals("/cards")) {
+                    resMassage += "\nKey: " + l;
+                TcpL.SendResponse(200, "text/plain", "\n" + resMassage);
+            } else if (resource.Contains("/users/")) {
+                string[] splited = resource.Split('/');
+                if (UH.AuthorizeUser(this, out resMassage, out username) == 0) {
+                    User user;
+                    TcpL.ma.Users.TryGetValue(splited[2], out user);
+                    TcpL.SendResponse(200, "text/plain", "\n" + user.ShowStats());
+                } else
+                    TcpL.SendResponse(401, "text/plain", resMassage);
+            } else if (resource.Equals("/cards")) {
                 if (UH.AuthorizeUser(this, out resMassage, out username) == 0) {
                     User user;
                     TcpL.ma.Users.TryGetValue(username, out user);
@@ -94,6 +100,11 @@ namespace MTCG_Server {
             string resMassage;
             string username;
 
+            if (resource.Equals("/save")) {
+                TcpL.ma.Save();
+                TcpL.SendResponse(200, "text/plain", "Saved!"); ;
+            }
+
             if (resource.Equals("/users")) {
                 try {
                     if (RC.values["Content-Type"].Equals("application/json;") || RC.values["Content-Type"].Equals("application/json"))    //Check if content type is 'text/plain'
@@ -128,6 +139,27 @@ namespace MTCG_Server {
                             TcpL.SendResponse(200, "text/plain", "\n" + resMassage);
                         else
                             TcpL.SendResponse(400, "text/plain", "\nYou cannot afford any Packages!");
+                    } else
+                        TcpL.SendResponse(401, "text/plain", "Authorization Requiered!");
+                } catch {
+                    TcpL.SendResponse(400, "text/plain", "Bad Request!"); //Return error on bad request
+                }
+            } else if (resource.Equals("/battles")) {
+                try {
+                    if (UH.AuthorizeUser(this, out resMassage, out username) == 0) {
+                        User user;
+                        TcpL.ma.Users.TryGetValue(username, out user);
+
+                        /*if (BQ.user1 == null) {
+                            BQ.user1 = user.name;
+                        } else {
+                            User user1;
+                            User user2 = user;
+                            TcpL.ma.Users.TryGetValue(BQ.user1, out user1);
+                            B = new Battle(ref user1, ref user2);
+                            B.StartBattle();
+                            BQ.user1 = null;
+                        }*/
                     } else
                         TcpL.SendResponse(401, "text/plain", "Authorization Requiered!");
                 } catch {
@@ -188,18 +220,7 @@ namespace MTCG_Server {
          *      - resource: Message to delete
          */
         private void Delete(string resource) {  //Look at the funtions above, at this point you should understand what this does
-            if (resource.Contains("/message/")) {
-                string[] splited = resource.Split('/');
-                try {
-                    if (MH.DeleteMessage(int.Parse(splited[2])) == 0)
-                        TcpL.SendResponse(200, "text/plain", "Deleted Message!");
-                    else
-                        TcpL.SendResponse(404, "text/plain", "Message Does Not Exist!");
-                } catch {
-                    TcpL.SendResponse(404, "text/plain", "Invalid Message ID!");
-                }
-            } else
-                TcpL.SendResponse(400, "text/plain", "Bad Request!");
+            ;
         }
 
         private string buildScoreboardString() { //Wusste nicht wo sonst hin mit der function

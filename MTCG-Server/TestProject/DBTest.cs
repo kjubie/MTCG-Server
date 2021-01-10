@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG_ServerTest {
-    public class DeleteTest {
+    public class DBTest {
         public HttpClient client;
 
         [SetUp]
