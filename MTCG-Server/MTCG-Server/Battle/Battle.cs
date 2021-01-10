@@ -18,6 +18,9 @@ namespace MTCG_Server {
             this.user_b = user_b;
         }
 
+        /*
+         * Set Battle Deck to current Deck
+         */
         public void StartBattle() {
             user_a.inBattle = 1;
             user_b.inBattle = 1;
@@ -30,6 +33,11 @@ namespace MTCG_Server {
             DrawCards();
         }
 
+        /*
+         * Draws upto two random selected Cards for each User
+         * 
+         * Calls EndBattle() if one User has no Cards left to Draw 
+         */
         public void DrawCards() {
             user_a.handcards[0] = null;
             user_a.handcards[1] = null;
@@ -83,6 +91,13 @@ namespace MTCG_Server {
             Console.WriteLine("Users have drawn!");
         }
 
+        /*
+         * Return the not chosen card to the Deck and sends the chosen ones into Battle
+         * 
+         * @params:
+         *      - user_a_chosenCard: Index of the Card that User A chose
+         *      - user_b_chosenCard: Index of the Card that User B chose
+         */
         public void ChooseCard(int user_a_chosenCard, int user_b_chosenCard) {
             for (int i = 0; i < 2; ++i) {
                 if (user_a_chosenCard != i && user_b.handcards[i] != null)
@@ -94,6 +109,13 @@ namespace MTCG_Server {
             MatchCards(user_a.handcards[user_a_chosenCard], user_b.handcards[user_b_chosenCard]);
         }
 
+        /*
+         * Evaluates the Damage of each Card with their Types, Effects, Races, etc taken into consideration.
+         * 
+         * @params:
+         *      - user_a_card: Card from User A
+         *      - user_b_card: Card from User B
+         */
         public void MatchCards(Card user_a_card, Card user_b_card) {
             int user_a_calcDamage;
             int user_b_calcDamage;
@@ -137,7 +159,7 @@ namespace MTCG_Server {
                 }
             }
 
-            int user_a_calcDamageOver = user_a_calcDamage + overDamage_user_a;
+            int user_a_calcDamageOver = user_a_calcDamage + overDamage_user_a; //Overdamage is the Damage bonus from last Round e.g.: Overwehlm of Buff 
             int user_b_calcDamageOver = user_b_calcDamage + overDamage_user_b;
 
             foreach (KeyValuePair<string, Effect> effect in user_a_card.effects)
@@ -149,6 +171,17 @@ namespace MTCG_Server {
             DoDamage(ref user_a_card, user_a_calcDamageOver, ref user_b_card, user_b_calcDamageOver);
         }
 
+        /*
+         * Checks which Card has the higher calculated Damage
+         * 
+         * The User with the stronger Card wins the Round and gets both Cards into his Deck
+         * 
+         * @params:
+         *      - user_a_card: Card from User A
+         *      - user_a_damge: Calculated Damage from User A  
+         *      - user_b_card: Card from User B
+         *      - user_b_damge: Calculated Damage from User B
+         */
         public void DoDamage(ref Card user_a_card, int user_a_damage, ref Card user_b_card, int user_b_damage) {
             Console.WriteLine(user_a_damage + " A " + user_b_damage + " B");
 
@@ -182,6 +215,13 @@ namespace MTCG_Server {
             }
         }
 
+        /*
+         * Places the given Card into the Deck of a given User
+         * 
+         * @params:
+         *      - card: Card to return
+         *      - user: User to return Card to
+         */
         public void ReturnCardToDeck(Card card, ref User user) {
             try {
                 user.GetBattleDeck().AddCard(card);
@@ -198,6 +238,14 @@ namespace MTCG_Server {
             }
         }
 
+        /*
+         * Ends the Battle and calculates the Elo, etc
+         * 
+         * @params:
+         *      - draw: 1 if battle was a draw, 0 if not
+         *      - winner: User that won
+         *      - loser: User that lost
+         */
         public void EndBattle(int draw, ref User winner, ref User loser) {
             if (draw == 1) {
                 battleInProgress = 0;
@@ -226,6 +274,9 @@ namespace MTCG_Server {
             }
         }
 
+        /*
+         * I think this is self explanatory
+         */
         public string HandCardsToString(string username) {
             string cards = "";
 

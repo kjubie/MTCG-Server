@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Npgsql;
 
 namespace MTCG_Server {
@@ -20,6 +17,13 @@ namespace MTCG_Server {
             SqlConnection.Close();
         }
 
+        /*
+         * Loads the Cards from the Database into a Cards Dictionary
+         * 
+         * @params:
+         *      - cards: Dict for the Cards
+         *      - types: Available Types
+         */
         public void LoadCards(ref Dictionary<string, Card> cards, Types types) {
             string cardsSelect = "select * from card";
             NpgsqlCommand cmd = new NpgsqlCommand(cardsSelect, SqlConnection);
@@ -43,6 +47,13 @@ namespace MTCG_Server {
             reader.Close();
         }
 
+        /*
+         * Loads the Users from the Database into a Users Dictionary
+         * 
+         * @params:
+         *      - users: Dict for the Users
+         *      - cards: All Cards
+         */
         public void LoadUsers(ref Dictionary<string, User> users, Dictionary<string, Card> cards) {
             string usersCountSelect = "select count(*) from mtcguser";
             NpgsqlCommand usersCountCmd = new NpgsqlCommand(usersCountSelect, SqlConnection);
@@ -90,6 +101,12 @@ namespace MTCG_Server {
             }
         }
 
+        /*
+         * Saves Userdata into the Database
+         * 
+         * @params:
+         *      - users: Users to save
+         */
         public void SaveUsers(ref Dictionary<string, User> users) {
             foreach(var user in users) {
                 NpgsqlCommand cmdUser = new NpgsqlCommand();
@@ -99,18 +116,18 @@ namespace MTCG_Server {
 
                 user.Value.GetStack().GetCards(out Dictionary<string, CardInStack> cardsStack);
                 foreach (var stackCard in cardsStack) {
-                    Console.WriteLine("insert into stackCards values ('" + user.Value.name + "', '" + stackCard.Value.GetCard().name + "') on conflict(cardname) do nothing");
                     cmdUser.CommandText = "insert into stackCards values ('" + user.Value.name + "', '" + stackCard.Value.GetCard().name + "') on conflict(cardname) do nothing";
                     cmdUser.ExecuteNonQuery();
                 }
 
                 user.Value.GetDeck().GetCards(out Dictionary<string, Card> cardsDeck);
                 foreach (var deckCard in cardsDeck) {
-                    Console.WriteLine("insert into deckCards values ('" + user.Value.name + "', '" + deckCard.Value.name + "') on conflict(cardname) do nothing");
                     cmdUser.CommandText = "insert into deckCards values ('" + user.Value.name + "', '" + deckCard.Value.name + "') on conflict(cardname) do nothing";
                     cmdUser.ExecuteNonQuery();
                 }
             }
+
+            Console.WriteLine("\nSaved to Database!\n");
         }
 
         public void LoadRace(string raceName, out Race race) {

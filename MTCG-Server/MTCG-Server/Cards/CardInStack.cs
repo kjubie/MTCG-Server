@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MTCG_Server {
-    public class CardInStack {
+﻿namespace MTCG_Server {
+    public class CardInStack { //Hold additional attributes for Cards that are in the Stack of a User
         public Card card;
-        int isInStore;
+        int isInStore; 
         int isInDeck;
 
         public CardInStack(Card card) {

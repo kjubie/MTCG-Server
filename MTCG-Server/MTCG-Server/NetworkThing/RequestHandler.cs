@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MTCG_Server {
     public class RequestHandler {
@@ -37,7 +34,7 @@ namespace MTCG_Server {
         }
 
         /*
-         * Reads a given resource and sends it to the client
+         * Handler for GET
          * 
          * @params:
          *      - resource: Requested resource
@@ -90,10 +87,11 @@ namespace MTCG_Server {
         }
 
         /*
-         * Adds a new message
+         * Handler for POST
          * 
          * @params:
-         *      - msg: Message to add
+         *      - resource: resource
+         *      - content: http body
          */
         private void Post(string resource, string content) {
             string resMassage;
@@ -148,17 +146,6 @@ namespace MTCG_Server {
                     if (UH.AuthorizeUser(this, out resMassage, out username) == 0) {
                         User user;
                         TcpL.ma.Users.TryGetValue(username, out user);
-
-                        /*if (BQ.user1 == null) {
-                            BQ.user1 = user.name;
-                        } else {
-                            User user1;
-                            User user2 = user;
-                            TcpL.ma.Users.TryGetValue(BQ.user1, out user1);
-                            B = new Battle(ref user1, ref user2);
-                            B.StartBattle();
-                            BQ.user1 = null;
-                        }*/
                     } else
                         TcpL.SendResponse(401, "text/plain", "Authorization Requiered!");
                 } catch {
@@ -168,11 +155,11 @@ namespace MTCG_Server {
         }
 
         /*
-         * Updates a message
+         * Hander for PUT
          * 
          * @params:
-         *      - resource: Message to update
-         *      - msg: New message text
+         *      - resource: resource
+         *      - msg: http body
          */
         private void Update(string resource, string msg) {
             string resMassage;
@@ -212,16 +199,16 @@ namespace MTCG_Server {
                 TcpL.SendResponse(400, "text/plain", "Bad Request!");
         }
 
-        /*
-         * Deletes a message
-         * 
-         * @params:
-         *      - resource: Message to delete
-         */
         private void Delete(string resource) {  //Look at the funtions above, at this point you should understand what this does
             ;
         }
 
+        /*
+         * Builds the Scoreboard
+         * 
+         * @return:
+         *      - The Scoreboard in String Format
+         */
         private string buildScoreboardString() { //Wusste nicht wo sonst hin mit der function
             string scoreboardString = "\nScoreboard:\n";
 

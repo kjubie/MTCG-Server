@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace MTCG_Server {
     public class BattleConnection {
@@ -16,7 +12,6 @@ namespace MTCG_Server {
 
         public BattleHandler BH;
         private RequestContext RC;
-        private Socket client = null;
         public Socket client1 = null;
         public Socket client2 = null;
         private string username1;
@@ -87,17 +82,6 @@ namespace MTCG_Server {
                     if(client1 != null && client2 != null)
                         if (client1.Connected && client2.Connected) {
                             BH = new BattleHandler(this, RC, client1, client2, username1, username2);
-
-                            /*
-                            Thread ctThread1 = new Thread(() => WaitForRequest(ref client1, username1));
-                            ctThread1.Start();
-
-                            Thread ctThread2 = new Thread(() => WaitForRequest(ref client2, username2));
-                            ctThread2.Start();
-
-                            ctThread1.Join();
-                            ctThread2.Join();
-                            */
                         }
                     Running = false;
                 }
@@ -112,6 +96,12 @@ namespace MTCG_Server {
             return err;
         }
 
+        /*
+         * Waits for the Battling Users to send the next request
+         * 
+         * @params:
+         *      - BH: The BattleHandler
+         */
         public void Rewait(BattleHandler BH) {
             client1 = null;
             client2 = null;
@@ -121,7 +111,6 @@ namespace MTCG_Server {
                     client1 = Server.AcceptSocket();
                     string username;
                     if (AuthorizeAgain(client1, ref BH, out username) == 0) {
-                        //BuildContext(ReceiveRequest(ref client));
                         SendHead(200, "text/plain", 300, ref client1);
                         SendBody("Authorized for Battle!\n", ref client1);
                         BH.RC = RC;
@@ -149,6 +138,9 @@ namespace MTCG_Server {
             }
         }
 
+        /*
+         * Rests the BattleConnection
+         */
         public void Reset() {
             try {
                 client1.Close();
@@ -163,6 +155,13 @@ namespace MTCG_Server {
             BH = null;
         }
 
+        /*
+         * Authorizes the User who wants to Start a Battle
+         * 
+         * @params:
+         *      - client: Socket to which the User connected
+         *      - username: Username of the Connected User
+         */
         public int Authorize(ref Socket client, ref string username) {
             BuildContext(ReceiveRequest(ref client));
 
@@ -186,6 +185,14 @@ namespace MTCG_Server {
             return -1;
         }
 
+        /*
+         * Authorizes a User again who is in this Battle
+         * 
+         * @params:
+         *      - client: Socket to which the User connected
+         *      - BH: The BattleHandler
+         *      - username: Username of the Connected User
+         */
         public int AuthorizeAgain(Socket client, ref BattleHandler BH, out string username) {
             username = "";
             
@@ -215,14 +222,6 @@ namespace MTCG_Server {
             }
 
             return -1;
-        }
-
-        public void WaitForRequest(ref Socket client, string username) {
-            while (client.Connected) {
-                BuildContext(ReceiveRequest(ref client));
-
-                BH.DoRequest(ref client, username);
-            }
         }
 
         /*

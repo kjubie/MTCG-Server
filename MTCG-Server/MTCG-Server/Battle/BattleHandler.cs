@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MTCG_Server {
     public class BattleHandler {
@@ -14,12 +10,10 @@ namespace MTCG_Server {
 
         public Socket client1;
         private User user1;
-        private int user1CanPick = 0;
         private int user1Pick = -1;
 
         public Socket client2;
         private User user2;
-        private int user2CanPick = 0;
         private int user2Pick = -1;
 
         int roundCount;
@@ -46,6 +40,9 @@ namespace MTCG_Server {
 
         }
 
+        /*
+         * Plays the Game I guess?
+         */
         private void Play() {
             while (roundCount <= 100) {
                 ++roundCount;
@@ -85,6 +82,14 @@ namespace MTCG_Server {
             BC.Reset();
         }
 
+
+        /*
+         * Executes the HTTP request
+         * 
+         * @params:
+         *      - client: Socket to which the User is connected
+         *      - usernameToAuth: Username of the connected User
+         */
         public void DoRequest(ref Socket client, string usernameToAuth) {
             string resMassage;
             string username;
@@ -93,7 +98,6 @@ namespace MTCG_Server {
             string content = RC.Body;
 
             if (resource.Equals("/pick")) {
-                //try {
                 if (UH.AuthorizeUser(this, out resMassage, out username) == 0) {
                     if (username.Equals(usernameToAuth)) {
                         User user;
@@ -107,7 +111,6 @@ namespace MTCG_Server {
                             Console.WriteLine("User 2 picks: " + user2Pick);
                         }
 
-                        //BC.SendHead(200, "text/plain", 120, ref client);
                         BC.SendBody("Picks done!\n", ref client);
 
                         if (user1Pick != -1 && user2Pick != -1) {
@@ -120,9 +123,6 @@ namespace MTCG_Server {
                         BC.SendResponse(401, "text/plain", "Unauthorized!", ref client);
                 } else
                     BC.SendResponse(401, "text/plain", resMassage, ref client);
-                //} catch {
-                    //BC.SendResponse(400, "text/plain", "Bad Request!", ref client);
-                //}
             }
         }
     }

@@ -103,7 +103,7 @@ Unit Tests:
 	- BattleTests
 	- TypeTests
 	- DBTests
-	- AuthTests
+	- AuthTests (Um die Auth Tests durchzuführen, muss das Programm laufen)
 	- EffectsTests
 
 Time spent:

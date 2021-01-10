@@ -1,26 +1,23 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MTCG_Server {
     public class User {
-        public string name { get; set; }
+        public string name { get; set; } //Name of the User
 
-        private string password;
-        public int credits { get; set; }
-        public int elo { get; set; }
+        private string password; //Password of the User
+        public int credits { get; set; } //Credits of the User
+        public int elo { get; set; } //Elo of the User
 
-        Deck deck;
-        Deck battleDeck;
-        Stack collection;
+        Deck deck; //Deck of the User
+        Deck battleDeck; //Temporay Deck for in Battle stuff
+        Stack collection; //Card collection of the User
 
-        public Card[] handcards = new Card[2];
+        public Card[] handcards = new Card[2]; //Handcards in Battle
         public int pick = -1;
 
-        string token;
+        string token; //AuthToken of the User
         public int inBattle { get; set; }
         public int online { get; set; }
 
@@ -147,6 +144,12 @@ namespace MTCG_Server {
             return 0;
         }
 
+        /*
+         * Buys four random new Cards for the User
+         * 
+         * @out:
+         *      - cardsString: Cards the User got
+         */
         public int BuyPack(Dictionary<string, Card> cards, out string cardsString) {
             cardsString = "";
 

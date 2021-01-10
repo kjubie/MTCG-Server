@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace MTCG_Server {
     public class Stack {
-        private Dictionary<string, CardInStack> cards;
+        private Dictionary<string, CardInStack> cards; //Cards in the Stack
 
         public Stack() {
             cards = new Dictionary<string, CardInStack>();

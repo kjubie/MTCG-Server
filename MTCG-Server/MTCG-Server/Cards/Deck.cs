@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace MTCG_Server {
     public class Deck {
-        Dictionary<string, Card> cards;
+        Dictionary<string, Card> cards; //Cards in the Deck 
 
         public Deck() {
             cards = new Dictionary<string, Card>();
