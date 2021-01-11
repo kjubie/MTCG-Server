@@ -108,15 +108,9 @@ echo 14) edit user data
 echo.
 curl -X GET http://localhost:25575/users/kienboec --header "Authorization: kienboec-mtcgToken"
 echo.
-curl -X GET http://localhost:25575/users/altenhof --header "Authorization: altenhof-mtcgToken"
-echo.
-curl -X PUT http://localhost:25575/users/kienboec --header "Content-Type: application/json" --header "Authorization: kienboec-mtcgToken" -d "{\"Name\": \"Kienboeck\"}"
-echo.
-curl -X PUT http://localhost:25575/users/altenhof --header "Content-Type: application/json" --header "Authorization: altenhof-mtcgToken" -d "{\"Name\": \"Altenhofer\", \"Bio\": \"me codin...\",  \"Image\": \":-D\"}"
+curl -X PUT http://localhost:25575/users/kienboec --header "Content-Type: application/json" --header "Authorization: kienboec-mtcgToken" -d "{\"Userame\": \"Kienboeck\"}"
 echo.
 curl -X GET http://localhost:25575/users/kienboec --header "Authorization: kienboec-mtcgToken"
-echo.
-curl -X GET http://localhost:25575/users/altenhof --header "Authorization: altenhof-mtcgToken"
 echo.
 echo.
 echo should fail:
@@ -124,37 +118,22 @@ curl -X PUT http://localhost:25575/users/kienboec --header "Content-Type: applic
 echo.
 curl -X PUT http://localhost:25575/users/altenhof --header "Content-Type: application/json" --header "Authorization: kienboec-mtcgToken" -d "{\"Name\": \"Hoax\", \"Bio\": \"me codin...\",  \"Image\": \":-D\"}"
 echo.
-curl -X GET http://localhost:25575/users/someGuy  --header "Authorization: kienboec-mtcgToken"
-echo.
-echo.
 
 REM --------------------------------------------------
 echo 15) stats
-curl -X GET http://localhost:25575/stats --header "Authorization: kienboec-mtcgToken"
+curl -X POST http://localhost:25575/sessions --header "Content-Type: application/json" -d "{\"Username\":\"kjubie\", \"Password\":\"123\"}"
 echo.
-curl -X GET http://localhost:25575/stats --header "Authorization: altenhof-mtcgToken"
+curl -X POST http://localhost:25575/sessions --header "Content-Type: application/json" -d "{\"Username\":\"1z3ro37\", \"Password\":\"123\"}"
+echo.
+curl -X GET http://localhost:25575/stats --header "Authorization: kjubie-mtcgToken"
+echo.
+curl -X GET http://localhost:25575/stats --header "Authorization: 1z3ro37-mtcgToken"
 echo.
 echo.
 
 REM --------------------------------------------------
 echo 16) scoreboard
-curl -X GET http://localhost:25575/score --header "Authorization: kienboec-mtcgToken"
-echo.
-echo.
-
-REM --------------------------------------------------
-echo 18) Stats 
-echo kienboec
-curl -X GET http://localhost:25575/stats --header "Authorization: kienboec-mtcgToken"
-echo.
-echo altenhof
-curl -X GET http://localhost:25575/stats --header "Authorization: altenhof-mtcgToken"
-echo.
-echo.
-
-REM --------------------------------------------------
-echo 19) scoreboard
-curl -X GET http://localhost:25575/score --header "Authorization: kienboec-mtcgToken"
+curl -X GET http://localhost:25575/score --header "Authorization: kjubie-mtcgToken"
 echo.
 echo.
 

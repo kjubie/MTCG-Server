@@ -101,7 +101,6 @@ namespace MTCG_Server {
                 string[] split = tokenAuth.Split('-');
 
                 Console.WriteLine("Auth: " + tokenAuth);
-                Console.WriteLine("Auth: " + split[0]);
 
                 User user;
                 if(ma.Users.TryGetValue(split[0], out user)) {
